@@ -6,6 +6,7 @@ const cors = require("cors");
 const userRouter = require("./routes/userRoutes");
 const socketio = require("socket.io");
 const socketIo = require("./socket");
+const groupRouter = require("./routes/groupRoutes");
 
 dotenv.config();
 const app = express();
@@ -33,6 +34,7 @@ socketIo(io);
 
 // routes
 app.use("/api/users", userRouter);
+app.use("/api/users", groupRouter);
 
 // start the server
 const PORT = process.env.PORT || 5000;
