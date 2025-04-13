@@ -1,43 +1,48 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const http = require("http");
 const cors = require("cors");
-const userRouter = require("./routes/userRoutes");
+const mongoose = require("mongoose");
+const http = require("http");
 const socketio = require("socket.io");
+const userRouter = require("./routes/userRoutes");
 const socketIo = require("./socket");
 const groupRouter = require("./routes/groupRoutes");
-
+const messageRouter = require("./routes/messageRoutes");
 dotenv.config();
+
 const app = express();
 const server = http.createServer(app);
-
 const io = socketio(server, {
   cors: {
-    origin: ["http://localhost:3690/"],
+    origin: ["http://localhost:0369", "https://krishna-chat-app.netlify.app"],
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
-// middlewares
+//middlewares
 app.use(cors());
 app.use(express.json());
-
-// connect to db
+//connect to db
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => console.log("db connected"))
-  .catch((err) => console.log(err));
+  .then(() => console.log("Connected to DB"))
+  .catch((err) => console.log("Mongodb connected failed", err));
 
-//   Intialisze
+//Initialize
 socketIo(io);
-
-// routes
-app.use("/api/users", userRouter);
-app.use("/api/users", groupRouter);
-
-// start the server
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+//our routes
+app.get("/", (req, res) => {
+  res.json({
+    project: "MERN Chat App using Socket.IO",
+    message: "Welcome to MERN Chat Application",
+    developedBy: "Krishna",
+    website: "www.krishna.com",
+  });
 });
+app.use("/api/users", userRouter);
+app.use("/api/groups", groupRouter);
+app.use("/api/messages", messageRouter);
+
+//start the server
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, console.log("Server is up and running on port", PORT));
