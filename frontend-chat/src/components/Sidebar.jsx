@@ -1,28 +1,29 @@
+/* eslint-disable react/prop-types */
 import {
+  Badge,
   Box,
-  VStack,
-  Text,
   Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
+  Flex,
   FormControl,
   FormLabel,
-  Input,
-  useToast,
-  Flex,
   Icon,
-  Badge,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
   Tooltip,
+  useDisclosure,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { FiLogOut, FiPlus, FiUsers } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import apiURL from "../../utils";
 
 const Sidebar = ({ setSelectedGroup }) => {

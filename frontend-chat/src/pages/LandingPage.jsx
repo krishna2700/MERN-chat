@@ -1,32 +1,30 @@
+/* eslint-disable react/prop-types */
 import {
+  Badge,
   Box,
   Button,
   Container,
-  Heading,
-  Text,
-  Stack,
-  Icon,
-  useColorModeValue,
-  SimpleGrid,
   Flex,
-  VStack,
+  Heading,
   HStack,
-  Badge,
-  Input,
+  Icon,
+  SimpleGrid,
+  Stack,
+  Text,
+  useColorModeValue,
+  VStack,
 } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
 import {
-  FiMessageSquare,
-  FiUsers,
+  FiActivity,
+  FiGlobe,
   FiLock,
   FiLogIn,
-  FiLogOut,
-  FiUserPlus,
-  FiGlobe,
-  FiActivity,
-  FiCheckCircle,
+  FiMessageSquare,
   FiUserCheck,
+  FiUserPlus,
+  FiUsers,
 } from "react-icons/fi";
+import { Link as RouterLink } from "react-router-dom";
 
 const Feature = ({ title, text, icon, badges = [] }) => {
   return (

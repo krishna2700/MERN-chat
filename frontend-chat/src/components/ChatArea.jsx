@@ -1,23 +1,23 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import {
+  Avatar,
   Box,
-  VStack,
-  HStack,
-  Text,
-  Input,
   Button,
   Flex,
   Icon,
-  Avatar,
+  Input,
   InputGroup,
   InputRightElement,
+  Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
-import { FiSend, FiInfo, FiMessageCircle } from "react-icons/fi";
-import UsersList from "./UsersList";
-import { useRef, useState } from "react";
-import { useEffect } from "react";
 import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import { FiInfo, FiMessageCircle, FiSend } from "react-icons/fi";
 import apiURL from "../../utils";
+import UsersList from "./UsersList";
 
 const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
   console.log(selectedGroup?._id);
