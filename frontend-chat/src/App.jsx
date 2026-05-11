@@ -3,6 +3,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
+import GuestChat from "./pages/GuestChat";
 import PrivateRoute from "./components/PrivateRoute";
 import LandingPage from "./pages/LandingPage";
 import { Box } from "@chakra-ui/react";
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/guest-chat" element={<GuestChat />} />
             <Route
               path="/chat"
               element={
