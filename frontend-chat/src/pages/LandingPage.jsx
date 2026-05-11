@@ -19,6 +19,7 @@ import {
   FiGlobe,
   FiLock,
   FiLogIn,
+  FiMessageCircle,
   FiMessageSquare,
   FiUserCheck,
   FiUserPlus,
@@ -176,6 +177,22 @@ export default function LandingPage() {
                 leftIcon={<FiLogIn />}
               >
                 Sign In
+              </Button>
+              <Button
+                as={RouterLink}
+                to="/guest-chat"
+                rounded="full"
+                size="lg"
+                fontWeight="normal"
+                px={8}
+                variant="ghost"
+                colorScheme="teal"
+                leftIcon={<FiMessageCircle />}
+                _hover={{ bg: "teal.50", color: "teal.600" }}
+                border="1px dashed"
+                borderColor="teal.300"
+              >
+                Chat as Guest
               </Button>
             </Stack>
           </Stack>
