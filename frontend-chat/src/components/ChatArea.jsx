@@ -6,6 +6,7 @@ import {
   Button,
   Flex,
   Icon,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -15,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { FiInfo, FiMessageCircle, FiSend } from "react-icons/fi";
+import { FiArrowDown, FiInfo, FiMessageCircle, FiSend } from "react-icons/fi";
 import apiURL from "../../utils";
 import UsersList from "./UsersList";
 
@@ -28,8 +29,22 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [typingUsers, setTypingUsers] = useState(new Set());
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const toast = useToast();
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
+
+  const handleScroll = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+    setShowScrollBtn(distanceFromBottom > 150);
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const currentUser = JSON.parse(localStorage.getItem("userInfo") || {});
 
@@ -321,8 +336,11 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
             </Flex>
 
             {/* Messages Area */}
+            <Box position="relative" flex="1" overflow="hidden">
             <VStack
-              flex="1"
+              ref={messagesContainerRef}
+              onScroll={handleScroll}
+              h="100%"
               overflowY="auto"
               spacing={4}
               align="stretch"
@@ -404,6 +422,27 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
               {renderTypingIndicator()}
               <div ref={messagesEndRef} />
             </VStack>
+
+            {/* Scroll-to-bottom floating button */}
+            {showScrollBtn && (
+              <IconButton
+                icon={<Icon as={FiArrowDown} />}
+                aria-label="Scroll to bottom"
+                onClick={scrollToBottom}
+                position="absolute"
+                bottom="12px"
+                right="12px"
+                zIndex={10}
+                colorScheme="blue"
+                borderRadius="full"
+                size="md"
+                boxShadow="lg"
+                opacity={0.9}
+                _hover={{ opacity: 1, transform: "translateY(-2px)" }}
+                transition="all 0.2s"
+              />
+            )}
+            </Box>
 
             {/* Message Input */}
             <Box
