@@ -1,5 +1,6 @@
 const express = require("express");
 const Group = require("../models/GroupModel");
+const Message = require("../models/ChatModel");
 const { protect, isAdmin } = require("../middleware/authMiddleware");
 const { trusted } = require("mongoose");
 
@@ -74,6 +75,31 @@ groupRouter.post("/:groupId/leave", protect, async (req, res) => {
     });
     await group.save();
     res.json({ message: "Successfully left the group" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// DELETE a group and all its messages (admin only)
+groupRouter.delete("/:groupId", protect, isAdmin, async (req, res) => {
+  try {
+    const group = await Group.findById(req.params.groupId);
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    // Cascade delete all messages in the group first
+    const messagesResult = await Message.deleteMany({
+      group: req.params.groupId,
+    });
+
+    await Group.findByIdAndDelete(req.params.groupId);
+
+    res.json({
+      message: "Group and all its messages deleted successfully",
+      groupId: req.params.groupId,
+      messagesDeleted: messagesResult.deletedCount,
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

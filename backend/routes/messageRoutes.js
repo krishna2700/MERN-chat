@@ -1,6 +1,6 @@
 const express = require("express");
 const Message = require("../models/ChatModel");
-const { protect } = require("../middleware/authMiddleware");
+const { protect, isAdmin } = require("../middleware/authMiddleware");
 
 const messageRouter = express.Router();
 
@@ -34,4 +34,42 @@ messageRouter.get("/:groupId", protect, async (req, res) => {
     res.status(400).json({ message: error.Message });
   }
 });
+
+// DELETE a single message by ID (sender or admin only)
+messageRouter.delete("/:messageId", protect, async (req, res) => {
+  try {
+    const message = await Message.findById(req.params.messageId);
+    if (!message) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    const isSender = message.sender.toString() === req.user._id.toString();
+    const admin = req.user.isAdmin;
+
+    if (!isSender && !admin) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this message" });
+    }
+
+    await Message.findByIdAndDelete(req.params.messageId);
+    res.json({ message: "Message deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// DELETE all messages in a group (admin only)
+messageRouter.delete("/group/:groupId", protect, isAdmin, async (req, res) => {
+  try {
+    const result = await Message.deleteMany({ group: req.params.groupId });
+    res.json({
+      message: "All messages in the group deleted successfully",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 module.exports = messageRouter;
