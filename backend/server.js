@@ -1,48 +1,40 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const http = require("http");
-const socketio = require("socket.io");
-const userRouter = require("./routes/userRoutes");
-const socketIo = require("./socket");
-const groupRouter = require("./routes/groupRoutes");
-const messageRouter = require("./routes/messageRoutes");
+import dotenv from "dotenv";
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+import { connectDB } from "./config/db.js";
+import ProductRoutes from "./routes/product.route.js";
+
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app);
-const io = socketio(server, {
-  cors: {
-    origin: ["http://localhost:0369", "https://krishna-chat-app.netlify.app"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-//middlewares
-app.use(cors());
 app.use(express.json());
-//connect to db
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("Connected to DB"))
-  .catch((err) => console.log("Mongodb connected failed", err));
 
-//Initialize
-socketIo(io);
-//our routes
-app.get("/", (req, res) => {
-  res.json({
-    project: "MERN Chat App using Socket.IO",
-    message: "Welcome to MERN Chat Application",
-    developedBy: "Krishna",
-    website: "www.krishna.com",
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use("/api/products", ProductRoutes);
+
+if (process.env.NODE_ENV !== "production") {
+  app.get("/", (req, res) => res.send("Server is ready!"));
+}
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
   });
-});
-app.use("/api/users", userRouter);
-app.use("/api/groups", groupRouter);
-app.use("/api/messages", messageRouter);
+}
 
-//start the server
-const PORT = process.env.PORT || 3690;
-server.listen(PORT, console.log("Server is up and running on port", PORT));
+const PORT = process.env.PORT || 5000;
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect DB:", err);
+  });
