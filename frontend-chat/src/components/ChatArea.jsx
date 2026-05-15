@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Avatar,
   Box,
   Button,
@@ -10,12 +16,13 @@ import {
   InputGroup,
   InputRightElement,
   Text,
+  useDisclosure,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { FiInfo, FiMessageCircle, FiSend } from "react-icons/fi";
+import { FiInfo, FiMessageCircle, FiSend, FiTrash2 } from "react-icons/fi";
 import apiURL from "../../utils";
 import UsersList from "./UsersList";
 
@@ -27,9 +34,12 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
   const [connectedUsers, setConnectedUsers] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [typingUsers, setTypingUsers] = useState(new Set());
+  const [isDeleting, setIsDeleting] = useState(false);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const cancelRef = useRef(null);
   const toast = useToast();
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
 
   const currentUser = JSON.parse(localStorage.getItem("userInfo") || {});
 
@@ -142,6 +152,38 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
       });
     }
   };
+  //delete all messages in chat
+  const deleteChat = async () => {
+    setIsDeleting(true);
+    try {
+      const token = currentUser.token;
+      await axios.delete(`${apiURL}/api/messages/${selectedGroup?._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMessages([]);
+      onDeleteClose();
+      toast({
+        title: "Chat cleared",
+        description: "All messages have been deleted.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    } catch (error) {
+      toast({
+        title: "Error clearing chat",
+        description: error?.response?.data?.message || "Something went wrong.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   //handleTyping
   const handleTyping = (e) => {
     setNewMessage(e.target.value);
@@ -311,13 +353,25 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
                   {selectedGroup.description}
                 </Text>
               </Box>
-              <Icon
-                as={FiInfo}
-                fontSize="20px"
-                color="gray.400"
-                cursor="pointer"
-                _hover={{ color: "blue.500" }}
-              />
+              <Flex align="center" gap={2}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  colorScheme="red"
+                  leftIcon={<Icon as={FiTrash2} />}
+                  onClick={onDeleteOpen}
+                  _hover={{ bg: "red.50" }}
+                >
+                  Delete Chat
+                </Button>
+                <Icon
+                  as={FiInfo}
+                  fontSize="20px"
+                  color="gray.400"
+                  cursor="pointer"
+                  _hover={{ color: "blue.500" }}
+                />
+              </Flex>
             </Flex>
 
             {/* Messages Area */}
@@ -489,6 +543,40 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
       >
         {selectedGroup && <UsersList users={connectedUsers} />}
       </Box>
+
+      {/* Delete Chat Confirmation Dialog */}
+      <AlertDialog
+        isOpen={isDeleteOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onDeleteClose}
+        isCentered
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Chat
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure you want to delete all messages in{" "}
+              <strong>{selectedGroup?.name}</strong>? This action cannot be
+              undone.
+            </AlertDialogBody>
+            <AlertDialogFooter gap={3}>
+              <Button ref={cancelRef} onClick={onDeleteClose} isDisabled={isDeleting}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={deleteChat}
+                isLoading={isDeleting}
+                loadingText="Deleting..."
+              >
+                Delete All Messages
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Flex>
   );
 };
