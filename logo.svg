@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#16213e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f3460;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Film reel gradient -->
+    <radialGradient id="reelGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#222;stop-opacity:1" />
+    </radialGradient>
+
+    <!-- Star gradient -->
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f7d794;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5cd79;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Glow filter -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+
+    <!-- Film strip pattern -->
+    <pattern id="filmHoles" x="0" y="0" width="24" height="20" patternUnits="userSpaceOnUse">
+      <rect x="4" y="4" width="10" height="12" rx="2" ry="2" fill="#1a1a2e" opacity="0.8"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="400" rx="16" ry="16" fill="url(#bgGrad)"/>
+
+  <!-- Subtle background stars -->
+  <circle cx="50" cy="40" r="1.5" fill="#fff" opacity="0.3"/>
+  <circle cx="120" cy="80" r="1" fill="#fff" opacity="0.2"/>
+  <circle cx="530" cy="50" r="1.5" fill="#fff" opacity="0.35"/>
+  <circle cx="480" cy="100" r="1" fill="#fff" opacity="0.2"/>
+  <circle cx="560" cy="140" r="1.2" fill="#fff" opacity="0.25"/>
+  <circle cx="70" cy="350" r="1" fill="#fff" opacity="0.2"/>
+  <circle cx="200" cy="30" r="1.3" fill="#fff" opacity="0.15"/>
+  <circle cx="400" cy="60" r="1" fill="#fff" opacity="0.2"/>
+  <circle cx="350" cy="370" r="1.5" fill="#fff" opacity="0.25"/>
+  <circle cx="520" cy="350" r="1" fill="#fff" opacity="0.15"/>
+
+  <!-- Film strip - top -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="55" width="540" height="36" rx="4" ry="4" fill="#333"/>
+    <rect x="30" y="55" width="540" height="36" rx="4" ry="4" fill="url(#filmHoles)"/>
+    <!-- Sprocket holes top strip -->
+    <rect x="48" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="88" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="128" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="168" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="208" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="248" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="288" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="328" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="368" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="408" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="448" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="488" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="528" y="62" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+  </g>
+
+  <!-- Film strip - bottom -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="310" width="540" height="36" rx="4" ry="4" fill="#333"/>
+    <rect x="30" y="310" width="540" height="36" rx="4" ry="4" fill="url(#filmHoles)"/>
+    <rect x="48" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="88" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="128" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="168" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="208" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="248" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="288" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="328" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="368" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="408" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="448" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="488" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+    <rect x="528" y="317" width="14" height="20" rx="3" ry="3" fill="#1a1a2e" opacity="0.9"/>
+  </g>
+
+  <!-- Film reel left -->
+  <g filter="url(#shadow)" transform="translate(105, 200)">
+    <circle cx="0" cy="0" r="48" fill="url(#reelGrad)" stroke="#555" stroke-width="2"/>
+    <circle cx="0" cy="0" r="38" fill="none" stroke="#555" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="12" fill="#1a1a2e" stroke="#555" stroke-width="1.5"/>
+    <!-- Spokes -->
+    <line x1="0" y1="-12" x2="0" y2="-38" stroke="#555" stroke-width="2"/>
+    <line x1="0" y1="12" x2="0" y2="38" stroke="#555" stroke-width="2"/>
+    <line x1="-12" y1="0" x2="-38" y2="0" stroke="#555" stroke-width="2"/>
+    <line x1="12" y1="0" x2="38" y2="0" stroke="#555" stroke-width="2"/>
+    <line x1="-8.5" y1="-8.5" x2="-26.9" y2="-26.9" stroke="#555" stroke-width="2"/>
+    <line x1="8.5" y1="8.5" x2="26.9" y2="26.9" stroke="#555" stroke-width="2"/>
+    <line x1="-8.5" y1="8.5" x2="-26.9" y2="26.9" stroke="#555" stroke-width="2"/>
+    <line x1="8.5" y1="-8.5" x2="26.9" y2="-26.9" stroke="#555" stroke-width="2"/>
+  </g>
+
+  <!-- Film reel right -->
+  <g filter="url(#shadow)" transform="translate(495, 200)">
+    <circle cx="0" cy="0" r="48" fill="url(#reelGrad)" stroke="#555" stroke-width="2"/>
+    <circle cx="0" cy="0" r="38" fill="none" stroke="#555" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="12" fill="#1a1a2e" stroke="#555" stroke-width="1.5"/>
+    <line x1="0" y1="-12" x2="0" y2="-38" stroke="#555" stroke-width="2"/>
+    <line x1="0" y1="12" x2="0" y2="38" stroke="#555" stroke-width="2"/>
+    <line x1="-12" y1="0" x2="-38" y2="0" stroke="#555" stroke-width="2"/>
+    <line x1="12" y1="0" x2="38" y2="0" stroke="#555" stroke-width="2"/>
+    <line x1="-8.5" y1="-8.5" x2="-26.9" y2="-26.9" stroke="#555" stroke-width="2"/>
+    <line x1="8.5" y1="8.5" x2="26.9" y2="26.9" stroke="#555" stroke-width="2"/>
+    <line x1="-8.5" y1="8.5" x2="-26.9" y2="26.9" stroke="#555" stroke-width="2"/>
+    <line x1="8.5" y1="-8.5" x2="26.9" y2="-26.9" stroke="#555" stroke-width="2"/>
+  </g>
+
+  <!-- Clapperboard -->
+  <g filter="url(#shadow)" transform="translate(230, 120)">
+    <!-- Board body -->
+    <rect x="0" y="30" width="140" height="90" rx="6" ry="6" fill="#e74c3c"/>
+    <rect x="8" y="42" width="124" height="70" rx="3" ry="3" fill="#c0392b"/>
+    <!-- Clapper top -->
+    <polygon points="0,30 140,30 135,0 5,0" fill="#2c3e50" stroke="#34495e" stroke-width="1"/>
+    <!-- Stripes on clapper -->
+    <polygon points="10,0 25,0 30,30 15,30" fill="#ecf0f1"/>
+    <polygon points="40,0 55,0 55,30 40,30" fill="#ecf0f1"/>
+    <polygon points="70,0 85,0 80,30 65,30" fill="#ecf0f1"/>
+    <polygon points="100,0 115,0 110,30 95,30" fill="#ecf0f1"/>
+    <!-- Text on board -->
+    <text x="70" y="72" text-anchor="middle" font-family="'Courier New', monospace" font-size="11" fill="#ecf0f1" font-weight="bold">SCENE</text>
+    <text x="70" y="90" text-anchor="middle" font-family="'Courier New', monospace" font-size="18" fill="#f7d794" font-weight="bold">001</text>
+    <line x1="20" y1="100" x2="120" y2="100" stroke="#ecf0f1" stroke-width="0.5" opacity="0.4"/>
+    <text x="70" y="112" text-anchor="middle" font-family="'Courier New', monospace" font-size="8" fill="#ecf0f1" opacity="0.7">TAKE 1</text>
+  </g>
+
+  <!-- Checkmark / watched icon -->
+  <g filter="url(#glow)" transform="translate(410, 155)">
+    <circle cx="25" cy="25" r="25" fill="none" stroke="#2ecc71" stroke-width="3" opacity="0.9"/>
+    <polyline points="12,25 22,35 40,15" fill="none" stroke="#2ecc71" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Title text -->
+  <text x="300" y="260" text-anchor="middle" font-family="'Georgia', serif" font-size="36" fill="#ecf0f1" font-weight="bold" filter="url(#glow)" letter-spacing="3">
+    Movie Watchlist
+  </text>
+
+  <!-- Subtitle -->
+  <text x="300" y="288" text-anchor="middle" font-family="'Courier New', monospace" font-size="13" fill="#f5cd79" letter-spacing="5" opacity="0.85">
+    TRACK · DISCOVER · ENJOY
+  </text>
+
+  <!-- Decorative stars -->
+  <g fill="url(#starGrad)" filter="url(#glow)">
+    <!-- Star 1 -->
+    <polygon points="175,270 178,278 187,278 180,283 183,291 175,286 167,291 170,283 163,278 172,278" opacity="0.7"/>
+    <!-- Star 2 -->
+    <polygon points="425,270 428,278 437,278 430,283 433,291 425,286 417,291 420,283 413,278 422,278" opacity="0.7"/>
+    <!-- Star 3 (smaller) -->
+    <polygon points="155,285 157,290 162,290 158,293 160,298 155,295 150,298 152,293 148,290 153,290" opacity="0.5"/>
+    <!-- Star 4 (smaller) -->
+    <polygon points="445,285 447,290 452,290 448,293 450,298 445,295 440,298 442,293 438,290 443,290" opacity="0.5"/>
+  </g>
+
+  <!-- Bottom accent line -->
+  <line x1="180" y1="300" x2="420" y2="300" stroke="#f5cd79" stroke-width="1" opacity="0.3"/>
+</svg>
