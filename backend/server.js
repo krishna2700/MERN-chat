@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { connectDB } from "./config/db.js";
 import ProductRoutes from "./routes/product.route.js";
+import ReadmeRoutes from "./routes/readme.route.js";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use("/api/products", ProductRoutes);
+app.use("/api/readme", ReadmeRoutes);
 
 if (process.env.NODE_ENV !== "production") {
   app.get("/", (req, res) => res.send("Server is ready!"));
