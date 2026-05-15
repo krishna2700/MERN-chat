@@ -1,5 +1,11 @@
 /* eslint-disable react/prop-types */
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Badge,
   Box,
   Button,
@@ -21,18 +27,27 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { FiLogOut, FiPlus, FiUsers } from "react-icons/fi";
+import { useEffect, useRef, useState } from "react";
+import { FiLogOut, FiPlus, FiTrash2, FiUsers } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import apiURL from "../../utils";
 
 const Sidebar = ({ setSelectedGroup }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+  const cancelRef = useRef();
   const [newGroupName, setNewGroupName] = useState("");
   const [groups, setGroups] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
   const [newGroupDescription, setNewGroupDescription] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [groupToDelete, setGroupToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -45,6 +60,7 @@ const Sidebar = ({ setSelectedGroup }) => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo") || {});
     //!update admin status
     setIsAdmin(userInfo?.isAdmin || false);
+    setCurrentUserId(userInfo?._id || null);
   };
 
   //fetch all groups
@@ -178,7 +194,41 @@ const Sidebar = ({ setSelectedGroup }) => {
       });
     }
   };
-  // Sample groups data
+  //delete group
+  const handleDeleteGroup = async () => {
+    if (!groupToDelete) return;
+    setIsDeleting(true);
+    try {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo") || {});
+      const token = userInfo.token;
+      await axios.delete(`${apiURL}/api/groups/${groupToDelete._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast({
+        title: "Group Deleted",
+        description: `"${groupToDelete.name}" and all its messages have been deleted.`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      setSelectedGroup(null);
+      onDeleteClose();
+      setGroupToDelete(null);
+      await fetchGroups();
+    } catch (error) {
+      toast({
+        title: "Error Deleting Group",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        description: error?.response?.data?.message || "An error occurred",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <Box
@@ -208,19 +258,17 @@ const Sidebar = ({ setSelectedGroup }) => {
             Groups
           </Text>
         </Flex>
-        {isAdmin && (
-          <Tooltip label="Create New Group" placement="right">
-            <Button
-              size="sm"
-              colorScheme="blue"
-              variant="ghost"
-              onClick={onOpen}
-              borderRadius="full"
-            >
-              <Icon as={FiPlus} fontSize="20px" />
-            </Button>
-          </Tooltip>
-        )}
+        <Tooltip label="Create New Group" placement="right">
+          <Button
+            size="sm"
+            colorScheme="blue"
+            variant="ghost"
+            onClick={onOpen}
+            borderRadius="full"
+          >
+            <Icon as={FiPlus} fontSize="20px" />
+          </Button>
+        </Tooltip>
       </Flex>
 
       <Box flex="1" overflowY="auto" p={4} mb={{ base: 20, md: 16 }}>
@@ -259,32 +307,55 @@ const Sidebar = ({ setSelectedGroup }) => {
                     {group.description}
                   </Text>
                 </Box>
-                <Button
-                  size="sm"
-                  colorScheme={
-                    userGroups?.includes(group?._id) ? "red" : "blue"
-                  }
-                  variant={userGroups?.includes(group?._id) ? "ghost" : "solid"}
-                  ml={3}
-                  onClick={() => {
-                    userGroups?.includes(group?._id)
-                      ? handleLeaveGroup(group?._id)
-                      : handleJoinGroup(group?._id);
-                  }}
-                  _hover={{
-                    transform: group.isJoined ? "scale(1.05)" : "none",
-                    bg: group.isJoined ? "red.50" : "blue.600",
-                  }}
-                  transition="all 0.2s"
-                >
-                  {userGroups.includes(group?._id) ? (
-                    <Text fontSize="sm" fontWeight="medium">
-                      Leave
-                    </Text>
-                  ) : (
-                    "Join"
+                <Flex align="center" gap={1} ml={3}>
+                  <Button
+                    size="sm"
+                    colorScheme={
+                      userGroups?.includes(group?._id) ? "red" : "blue"
+                    }
+                    variant={
+                      userGroups?.includes(group?._id) ? "ghost" : "solid"
+                    }
+                    onClick={() => {
+                      userGroups?.includes(group?._id)
+                        ? handleLeaveGroup(group?._id)
+                        : handleJoinGroup(group?._id);
+                    }}
+                    _hover={{
+                      transform: group.isJoined ? "scale(1.05)" : "none",
+                      bg: group.isJoined ? "red.50" : "blue.600",
+                    }}
+                    transition="all 0.2s"
+                  >
+                    {userGroups.includes(group?._id) ? (
+                      <Text fontSize="sm" fontWeight="medium">
+                        Leave
+                      </Text>
+                    ) : (
+                      "Join"
+                    )}
+                  </Button>
+                  {(isAdmin ||
+                    group?.admin?._id === currentUserId ||
+                    group?.admin === currentUserId) && (
+                    <Tooltip label="Delete Group" placement="top">
+                      <Button
+                        size="sm"
+                        colorScheme="red"
+                        variant="ghost"
+                        borderRadius="full"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setGroupToDelete(group);
+                          onDeleteOpen();
+                        }}
+                        _hover={{ bg: "red.50" }}
+                      >
+                        <Icon as={FiTrash2} />
+                      </Button>
+                    </Tooltip>
                   )}
-                </Button>
+                </Flex>
               </Flex>
             </Box>
           ))}
@@ -318,6 +389,40 @@ const Sidebar = ({ setSelectedGroup }) => {
           Logout
         </Button>
       </Box>
+
+      {/* Delete Group Confirmation Dialog */}
+      <AlertDialog
+        isOpen={isDeleteOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onDeleteClose}
+        isCentered
+      >
+        <AlertDialogOverlay backdropFilter="blur(4px)" />
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold" color="red.600">
+            Delete Group
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            Are you sure you want to delete{" "}
+            <strong>{groupToDelete?.name}</strong>? This will permanently remove
+            the group and all its messages. This action cannot be undone.
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={onDeleteClose}>
+              Cancel
+            </Button>
+            <Button
+              colorScheme="red"
+              onClick={handleDeleteGroup}
+              isLoading={isDeleting}
+              loadingText="Deleting..."
+              ml={3}
+            >
+              Delete Group
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay backdropFilter="blur(4px)" />

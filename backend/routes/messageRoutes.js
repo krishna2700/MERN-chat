@@ -34,4 +34,17 @@ messageRouter.get("/:groupId", protect, async (req, res) => {
     res.status(400).json({ message: error.Message });
   }
 });
+//delete all messages for a group
+messageRouter.delete("/:groupId", protect, async (req, res) => {
+  try {
+    const result = await Message.deleteMany({ group: req.params.groupId });
+    res.json({
+      message: "All messages deleted successfully",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 module.exports = messageRouter;
